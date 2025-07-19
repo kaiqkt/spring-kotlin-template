@@ -1,0 +1,4 @@
+---
+auth:
+  access-token-secret: world
+  api-key: world

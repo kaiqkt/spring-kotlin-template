@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: demo
+
+auth:
+  access-token-secret: world
+  api-key: world

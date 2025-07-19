@@ -1,0 +1,4 @@
+---
+auth:
+  access-token-secret: ${ACCESS_TOKEN_SECRET}
+  api-key: ${API-KEY}
