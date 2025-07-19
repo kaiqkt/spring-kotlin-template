@@ -156,8 +156,8 @@ openApiGenerate {
     generatorName = "kotlin-spring"
     inputSpec = "$rootDir/src/main/resources/static/api-docs.yml"
     outputDir = "${layout.buildDirectory.get()}/generated"
-    apiPackage = "${project.group}.generated.api"
-    modelPackage = "${project.group}.generated.model"
+    apiPackage = "${project.group}.generated.application.web.controllers"
+    modelPackage = "${project.group}.generated.application.web.dtos"
     configOptions = mapOf(
         "dateLibrary" to "java8",
         "interfaceOnly" to "true",
