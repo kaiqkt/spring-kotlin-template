@@ -37,7 +37,7 @@ repositories {
     // Uncomment and configure if using GitHub Packages
     maven {
         name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/your-org/*")
+        url = uri("https://maven.pkg.github.com/kaiqkt/*")
         credentials {
             username = project.findProperty("gpr.user") as String? ?: System.getenv("GPR_USER")
             password = project.findProperty("gpr.key") as String? ?: System.getenv("GPR_API_KEY")
@@ -56,6 +56,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    // Custom Libraries
+    implementation("com.kaiqkt:kt-tools-healthcheck:1.0.0")
+    implementation("com.kaiqkt:kt-tools-security:1.0.6")
+
     // Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
@@ -68,30 +72,29 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("io.rest-assured:rest-assured")
     testImplementation("io.mockk:mockk:1.13.14")
-    testImplementation("org.testcontainers:junit-jupiter:1.19.7")
-    testImplementation("org.testcontainers:postgresql:1.19.7")
+    testImplementation("com.auth0:java-jwt:4.4.0")
+    testImplementation("org.mock-server:mockserver-netty:5.15.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.testcontainers:testcontainers:1.21.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.20.6")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 // Kotlin compiler configuration
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll(
-            "-Xjsr305=strict",
-            "-opt-in=kotlin.RequiresOptIn"
-        )
+        freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 }
 
-// Test configuration
 tasks.withType<Test> {
     useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
-    finalizedBy(tasks.jacocoTestReport, tasks.jacocoTestCoverageVerification)
 }
+
 
 // JaCoCo test report configuration
 tasks.jacocoTestReport {
@@ -125,21 +128,18 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.8".toBigDecimal()
+                minimum = "1.0".toBigDecimal()
                 counter = "LINE"
-                value = "COVEREDRATIO"
             }
             limit {
-                minimum = "0.8".toBigDecimal()
+                minimum = "1.0".toBigDecimal()
                 counter = "BRANCH"
-                value = "COVEREDRATIO"
             }
         }
     }
 }
 
 //OpenAPI code generation
-
 sourceSets {
     main {
         java {
@@ -164,17 +164,4 @@ openApiGenerate {
         "useBeanValidation" to "true",
         "useSpringBoot3" to "true"
     )
-}
-
-
-// Task to generate a dependency tree
-tasks.register<DependencyReportTask>("allDeps")
-
-// Task to run the application with dev profile
-tasks.register<JavaExec>("bootRunDev") {
-    group = "application"
-    description = "Runs the Spring Boot application with the 'dev' profile"
-    classpath = sourceSets.main.get().runtimeClasspath
-    mainClass.set("${project.group}.ApplicationKt")
-    args("--spring.profiles.active=dev")
 }

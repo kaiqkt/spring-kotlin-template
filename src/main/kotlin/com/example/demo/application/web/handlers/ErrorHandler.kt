@@ -2,7 +2,7 @@ package com.example.demo.application.web.handlers
 
 import com.example.demo.domain.exceptions.DomainException
 import com.example.demo.domain.exceptions.ErrorType
-import com.example.demo.generated.application.web.dtos.ErrorV1
+import com.example.generated.model.ErrorV1
 import jakarta.validation.ConstraintViolationException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
